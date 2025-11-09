@@ -1,0 +1,181 @@
+SQL Queries - all types of Join, Sub-Query and View: 
+Write at least 10 SQL queries for suitable database application using SQL DML statements. 
+e.  
+f. Note: Instructor will design the queries which demonstrate the use of concepts like all types of 
+Join, Sub-Query and View 
+
+-- Practical 2: SQL Joins, Subqueries and Views
+-- MySQL compatible for Ubuntu terminal
+
+CREATE DATABASE college_db;
+USE college_db;
+
+-- Create tables
+CREATE TABLE Course (
+  course_id INT PRIMARY KEY,
+  course_name VARCHAR(50),
+  duration INT
+);
+
+CREATE TABLE Student (
+  student_id INT PRIMARY KEY,
+  name VARCHAR(50),
+  age INT,
+  course_id INT,
+  marks DECIMAL(5,2),
+  FOREIGN KEY (course_id) REFERENCES Course(course_id)
+);
+
+-- Insert data
+INSERT INTO Course VALUES 
+(1, 'DBMS', 4),
+(2, 'Computer Networks', 3),
+(3, 'Operating Systems', 4),
+(4, 'Data Structures', 3);
+
+INSERT INTO Student VALUES 
+(101, 'Arya', 20, 1, 85.5),
+(102, 'Krushna', 21, 2, 90.0),
+(103, 'Yash', 19, 1, 78.0),
+(104, 'Rohit', 22, 3, 88.5),
+(105, 'Sneha', 20, 2, 92.0),
+(106, 'Priya', 21, NULL, 95.0),  -- Student without course
+(107, 'Raj', 19, 4, 87.0);
+
+-- QUERY 1: INNER JOIN (Students with their courses)
+SELECT s.name, c.course_name, s.marks
+FROM Student s
+INNER JOIN Course c ON s.course_id = c.course_id;
+
+-- QUERY 2: LEFT JOIN (All students with their courses if any)
+SELECT s.name, c.course_name
+FROM Student s
+LEFT JOIN Course c ON s.course_id = c.course_id;
+
+-- QUERY 3: RIGHT JOIN (All courses with enrolled students)
+SELECT s.name, c.course_name
+FROM Student s
+RIGHT JOIN Course c ON s.course_id = c.course_id;
+
+-- QUERY 4: FULL OUTER JOIN (MySQL doesn't have FULL OUTER, simulate with UNION)
+SELECT s.name, c.course_name
+FROM Student s
+LEFT JOIN Course c ON s.course_id = c.course_id
+UNION
+SELECT s.name, c.course_name
+FROM Student s
+RIGHT JOIN Course c ON s.course_id = c.course_id;
+
+-- QUERY 5: CROSS JOIN (Cartesian product)
+SELECT s.name, c.course_name
+FROM Student s
+CROSS JOIN Course c
+LIMIT 10;  -- Limit results for demonstration
+
+-- QUERY 6: SELF JOIN (Students in same course)
+SELECT s1.name AS Student1, s2.name AS Student2, c.course_name
+FROM Student s1
+JOIN Student s2 ON s1.course_id = s2.course_id
+JOIN Course c ON s1.course_id = c.course_id
+WHERE s1.student_id < s2.student_id;  -- Avoid duplicates and self-pairs
+
+-- QUERY 7: Single-row subquery (Highest scoring student)
+SELECT name, marks
+FROM Student
+WHERE marks = (SELECT MAX(marks) FROM Student);
+
+-- QUERY 8: Multiple-row subquery (Students in same courses as Arya)
+SELECT name, course_id
+FROM Student
+WHERE course_id IN (
+  SELECT course_id FROM Student WHERE name = 'Arya'
+) AND name != 'Arya';
+
+-- QUERY 9: Correlated subquery (Students above average marks in their course)
+SELECT s.name, s.marks, c.course_name
+FROM Student s
+JOIN Course c ON s.course_id = c.course_id
+WHERE marks > (
+  SELECT AVG(marks) FROM Student 
+  WHERE course_id = s.course_id
+);
+
+-- QUERY 10: Subquery in FROM clause
+SELECT course_name, avg_marks
+FROM (
+  SELECT c.course_name, AVG(s.marks) as avg_marks
+  FROM Course c
+  LEFT JOIN Student s ON c.course_id = s.course_id
+  GROUP BY c.course_name
+) AS course_stats
+WHERE avg_marks > 85;
+
+-- QUERY 11: EXISTS subquery (Courses with students)
+SELECT course_name
+FROM Course c
+WHERE EXISTS (
+  SELECT 1 FROM Student s 
+  WHERE s.course_id = c.course_id
+);
+
+-- QUERY 12: NOT EXISTS subquery (Courses without students)
+SELECT course_name
+FROM Course c
+WHERE NOT EXISTS (
+  SELECT 1 FROM Student s 
+  WHERE s.course_id = c.course_id
+);
+
+-- VIEW 1: Simple view (High scorers)
+CREATE VIEW high_scorers AS
+SELECT name, marks, course_id 
+FROM Student 
+WHERE marks > 85;
+
+-- QUERY 13: Select from view
+SELECT * FROM high_scorers;
+
+-- VIEW 2: Complex view with join
+CREATE VIEW student_course_details AS
+SELECT 
+    s.student_id,
+    s.name AS student_name,
+    s.marks,
+    c.course_name,
+    c.duration,
+    CASE 
+        WHEN s.marks >= 90 THEN 'A'
+        WHEN s.marks >= 80 THEN 'B'
+        WHEN s.marks >= 70 THEN 'C'
+        ELSE 'D'
+    END AS grade
+FROM Student s
+LEFT JOIN Course c ON s.course_id = c.course_id;
+
+-- QUERY 14: Select from complex view
+SELECT * FROM student_course_details ORDER BY marks DESC;
+
+-- VIEW 3: Aggregate view
+CREATE VIEW course_statistics AS
+SELECT 
+    c.course_name,
+    COUNT(s.student_id) AS student_count,
+    AVG(s.marks) AS average_marks,
+    MAX(s.marks) AS highest_marks,
+    MIN(s.marks) AS lowest_marks
+FROM Course c
+LEFT JOIN Student s ON c.course_id = s.course_id
+GROUP BY c.course_id, c.course_name;
+
+-- QUERY 15: Select from aggregate view
+SELECT * FROM course_statistics;
+
+-- Display all created views
+SHOW FULL TABLES WHERE Table_type = 'VIEW';
+
+-- Show table data for verification
+SELECT 'Student Table:' as '';
+SELECT * FROM Student;
+
+SELECT 'Course Table:' as '';
+SELECT * FROM Course;

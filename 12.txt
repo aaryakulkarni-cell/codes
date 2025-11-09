@@ -1,0 +1,59 @@
+ Database Connectivity: 
+Write a program to implement MongoDB database connectivity with any front end language to 
+implement Database navigation operations (add, delete, edit etc.)
+
+B4- 
+
+# 1. Save file as SimpleMongoDB.java
+# 2. Download driver (one-time)
+wget https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/3.12.11/mongo-java-driver-3.12.11.jar
+sudo cp mongo-java-driver-3.12.11.jar /usr/local/lib/
+
+# 3. Compile
+javac -cp ".:/usr/local/lib/mongo-java-driver-3.12.11.jar" SimpleMongoDB.java
+
+# 4. Run
+java -cp ".:/usr/local/lib/mongo-java-driver-3.12.11.jar" SimpleMongoDB
+
+import com.mongodb.client.*;
+import org.bson.Document;
+
+public class SimpleMongoDB {
+    public static void main(String[] args) {
+        try {
+            // 1. CONNECT TO DATABASE
+            MongoClient client = MongoClients.create("mongodb://localhost:27017");
+            MongoDatabase database = client.getDatabase("school_db");
+            MongoCollection<Document> collection = database.getCollection("students");
+            
+            // 2. ADD STUDENT
+            Document student1 = new Document("name", "John")
+                                .append("age", 20)
+                                .append("email", "john@email.com");
+            collection.insertOne(student1);
+            System.out.println("Student added!");
+            
+            // 3. VIEW STUDENTS
+            for (Document student : collection.find()) {
+                System.out.println("Name: " + student.getString("name") + 
+                                 ", Age: " + student.getInteger("age"));
+            }
+            
+            // 4. EDIT STUDENT
+            collection.updateOne(
+                new Document("name", "John"),
+                new Document("$set", new Document("age", 21))
+            );
+            System.out.println("Student updated!");
+            
+            // 5. DELETE STUDENT
+            collection.deleteOne(new Document("name", "John"));
+            System.out.println("Student deleted!");
+            
+            client.close();
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
