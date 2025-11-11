@@ -1,0 +1,161 @@
+Pass 2- 
+
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <map>
+#include <sstream>
+using namespace std;
+
+class PassTwoAssembler {
+private:
+    map<string, string> opcodeTable;
+    map<string, string> registerTable;
+    map<string, string> symbolTable;
+    vector<string> intermediateCode;
+
+public:
+    // Constructor - initialize opcode and register tables
+    PassTwoAssembler() {
+        initializeOpcodeTable();
+        initializeRegisterTable();
+    }
+
+    void initializeOpcodeTable() {
+        opcodeTable = {
+            {"START", "00"}, {"END", "00"}, {"ORIGIN", "00"}, {"EQU", "00"}, {"LTORG", "00"},
+            {"DS", "00"}, {"DC", "00"}, 
+            {"MOVER", "01"}, {"MOVEM", "02"}, {"ADD", "03"}, {"SUB", "04"}, 
+            {"MULT", "05"}, {"BC", "06"}, {"STOP", "07"}
+        };
+    }
+
+    void initializeRegisterTable() {
+        registerTable = {
+            {"AREG", "1"}, {"BREG", "2"}, {"CREG", "3"}
+        };
+    }
+
+    // Read symbol table from file
+    void readSymbolTable(string filename) {
+        ifstream file(filename);
+        string symbol, address;
+        
+        cout << "Reading Symbol Table..." << endl;
+        while(file >> symbol >> address) {
+            symbolTable[symbol] = address;
+            cout << "Symbol: " << symbol << " -> Address: " << address << endl;
+        }
+        file.close();
+    }
+
+    // Read intermediate code from file
+    void readIntermediateCode(string filename) {
+        ifstream file(filename);
+        string line;
+        
+        cout << "\nReading Intermediate Code..." << endl;
+        while(getline(file, line)) {
+            if(!line.empty()) {
+                intermediateCode.push_back(line);
+                cout << line << endl;
+            }
+        }
+        file.close();
+    }
+
+    // Process each line and generate machine code
+    void generateMachineCode(string outputFilename) {
+        ofstream output(outputFilename);
+        
+        cout << "\nGenerating Machine Code..." << endl;
+        output << "LC\tOPCODE\tREG\tADDRESS\tCOMMENT" << endl;
+        output << "----------------------------------------" << endl;
+        
+        for(string line : intermediateCode) {
+            stringstream ss(line);
+            string lc, label, opcode, operand1, operand2;
+            
+            // CORRECTED PARSING LOGIC
+            ss >> lc;  // Read location counter
+            
+            string nextWord;
+            ss >> nextWord;  // Read next word to check if it's a label
+            
+            if(nextWord.find(":") != string::npos) {
+                // Line has label format: "203 LOOP: MOVER AREG A"
+                label = nextWord;
+                ss >> opcode >> operand1 >> operand2;
+            } else {
+                // Line has no label: "201 MOVER AREG ='5'"
+                opcode = nextWord;
+                ss >> operand1 >> operand2;
+            }
+            
+            // Skip directives in machine code
+            if(opcode == "START"  opcode == "END"  opcode == "LTORG" || 
+               opcode == "ORIGIN"  opcode == "EQU"  opcode == "DS") {
+                continue;
+            }
+            
+            // Generate machine code for regular instructions
+            if(opcodeTable.find(opcode) != opcodeTable.end() && opcode != "START") {
+                string machineOpcode = opcodeTable[opcode];
+                string machineReg = "0";  // Default for no register
+                string machineAddr = "0"; // Default for no address
+                
+                // Handle register
+                if(registerTable.find(operand1) != registerTable.end()) {
+                    machineReg = registerTable[operand1];
+                }
+                
+                // Handle address (symbol or literal)
+                if(!operand2.empty()) {
+                    if(symbolTable.find(operand2) != symbolTable.end()) {
+                        machineAddr = symbolTable[operand2];
+                    } else if(operand2[0] == '=') {
+                        // Literal - simple handling
+                        machineAddr = "000"; // Placeholder
+                    } else {
+                        machineAddr = operand2; // Direct number
+                    }
+                }
+                
+                // Remove colon from label for display
+                string displayLabel = label;
+                if(!displayLabel.empty() && displayLabel.back() == ':') {
+                    displayLabel = displayLabel.substr(0, displayLabel.length() - 1);
+                }
+                
+                // Write machine code
+                string comment = " ; ";
+                if(!displayLabel.empty()) {
+                    comment += displayLabel + " ";
+                }
+                comment += opcode + " " + operand1 + " " + operand2;
+                
+                output << lc << "\t" << machineOpcode << "\t" << machineReg << "\t" << machineAddr << comment << endl;
+                
+                cout << "Processed: " << lc << " -> " << machineOpcode << " " << machineReg << " " << machineAddr << endl;
+            }
+        }
+        
+        output.close();
+        cout << "\nMachine code written to: " << outputFilename << endl;
+    }
+};
+
+int main() {
+    PassTwoAssembler assembler;
+    
+    // Read Pass-I output files
+    assembler.readSymbolTable("symtab.txt");
+    assembler.readIntermediateCode("intermediate.txt");
+    
+    // Generate machine code
+    assembler.generateMachineCode("machine_code.txt");
+    
+    cout << "\n=== PASS-II COMPLETED SUCCESSFULLY ===" << endl;
+    return 0;
+}

@@ -1,0 +1,126 @@
+Pass 1: 
+
+
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <map>
+using namespace std;
+
+// Simple data structures
+map<string, int> SYMTAB;  // Symbol Table
+vector<string> IC;        // Intermediate Code
+int LC = 0;               // Location Counter
+
+int main() {
+    vector<string> program;
+    string line;
+    
+    cout << "=== PASS-I ASSEMBLER ===" << endl;
+    cout << "Enter your assembly code (type 'END' on a new line to finish):" << endl;
+    cout << "Example: START 200" << endl;
+    cout << "         MOVER AREG A" << endl;
+    cout << "         LOOP MOVER BREG B" << endl;
+    cout << "         END" << endl;
+    cout << "\nEnter your code:" << endl;
+    
+    // Get user input
+    while(true) {
+        cout << "> ";
+        getline(cin, line);
+        if(line == "END") {
+            program.push_back(line);
+            break;
+        }
+        if(!line.empty()) {
+            program.push_back(line);
+        }
+    }
+    
+    int programSize = program.size();
+    
+    cout << "\n=== PROCESSING ASSEMBLY CODE ===" << endl;
+    
+    // Process each line
+    for(int i = 0; i < programSize; i++) {
+        string line = program[i];
+        
+        // Simple parsing - just for demonstration
+        if(line.find("START") != string::npos) {
+            // Extract starting address
+            size_t pos = line.find("START");
+            if(pos != string::npos) {
+                string address = line.substr(pos + 5); // Skip "START"
+                LC = stoi(address);
+            }
+            IC.push_back(to_string(LC) + "\tSTART\t" + to_string(LC));
+        }
+        else if(line.find("END") != string::npos) {
+            IC.push_back(to_string(LC) + "\tEND");
+        }
+        else if(line.find("LOOP") != string::npos && line.find(":") != string::npos) {
+            SYMTAB["LOOP"] = LC;
+            IC.push_back(to_string(LC) + "\tLOOP\t" + line.substr(line.find(":") + 2));
+            LC++;
+        }
+        else if(line.find("NEXT") != string::npos && line.find(":") != string::npos) {
+            SYMTAB["NEXT"] = LC;
+            IC.push_back(to_string(LC) + "\tNEXT\t" + line.substr(line.find(":") + 2));
+            LC++;
+        }
+        else if(line.find("DS") != string::npos) {
+            // Handle Define Storage
+            if(line.find("A DS") != string::npos) {
+                SYMTAB["A"] = LC;
+                IC.push_back(to_string(LC) + "\tA\tDS\t1");
+            }
+            else if(line.find("B DS") != string::npos) {
+                SYMTAB["B"] = LC; 
+                IC.push_back(to_string(LC) + "\tB\tDS\t1");
+            }
+            else {
+                // Generic DS handling
+                IC.push_back(to_string(LC) + "\t" + line);
+            }
+            LC++;
+        }
+        else if(line.find("LTORG") != string::npos) {
+            IC.push_back(to_string(LC) + "\tLTORG");
+            // In actual implementation, this would process literals
+        }
+        else {
+            // Regular instruction
+            IC.push_back(to_string(LC) + "\t" + line);
+            LC++;
+        }
+    }
+    
+    // Create output files for Pass-II
+    ofstream intermediateFile("intermediate.txt");
+    ofstream symbolFile("symtab.txt");
+    
+    // Write Intermediate Code to file
+    intermediateFile << "LC\tInstruction" << endl;
+    intermediateFile << "----------------" << endl;
+    for(string code : IC) {
+        intermediateFile << code << endl;
+    }
+    intermediateFile.close();
+    
+    // Write Symbol Table to file
+    symbolFile << "Symbol\tAddress" << endl;
+    symbolFile << "---------------" << endl;
+    for(auto entry : SYMTAB) {
+        symbolFile << entry.first << "\t" << entry.second << endl;
+    }
+    symbolFile.close();
+    
+    // Show confirmation on screen
+    cout << "\nPASS-I COMPLETED!" << endl;
+    cout << "Output files created:" << endl;
+    cout << "- intermediate.txt (for Pass-II input)" << endl;
+    cout << "- symtab.txt (for Pass-II input)" << endl;
+    
+    return 0;
+}

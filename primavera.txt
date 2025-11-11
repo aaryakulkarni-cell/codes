@@ -1,0 +1,216 @@
+Primavera - 
+
+Absolutely! I will give you a complete beginner's script with everything you need to type and click. Just follow this word-for-word.
+
+---
+
+PRIMAVERA P6 PRACTICAL EXAM - COMPLETE SCRIPT
+
+STARTING THE SOFTWARE
+
+1. Double-click the Primavera P6 icon on your desktop.
+2. Login Window appears:
+   · Database: ORAPMDB (usually already selected)
+   · Username: admin
+   · Password: admin
+   · Click OK
+
+---
+
+PART 1: CREATE PROJECT PLAN
+
+Step 1: Create New Project
+
+· Click Enterprise (top menu) → Click Projects
+· Click Add button (green + sign on toolbar)
+· In the Project Name column, type: My First Project
+· Click on your project "My First Project" to select it
+· In bottom pane, find Dates section
+· Set Planned Start to: [Choose today's date]
+
+Step 2: Add Tasks
+
+· Click Activities button on toolbar (looks like checklist 📋)
+· Click Add button 8 times to create 8 blank tasks
+· Type these exact names in Activity Name column:
+  1. Project Kickoff
+  2. Site Survey
+  3. Design Phase
+  4. Design Approval
+  5. Construction
+  6. Quality Check
+  7. Final Inspection
+  8. Project Complete
+
+Step 3: Set Durations
+
+· In Original Duration column, type for each task:
+  1. 1d (Project Kickoff)
+  2. 3d (Site Survey)
+  3. 10d (Design Phase)
+  4. 0d (Design Approval) ← This becomes a milestone
+  5. 15d (Construction)
+  6. 2d (Quality Check)
+  7. 1d (Final Inspection)
+  8. 0d (Project Complete) ← This becomes a milestone
+
+Step 4: Create Dependencies (Links)
+
+· Click Link button on toolbar (chain icon 🔗)
+· Click in this order:
+  · Click Project Kickoff → Click Site Survey
+  · Click Site Survey → Click Design Phase
+  · Click Design Phase → Click Design Approval
+  · Click Design Approval → Click Construction
+  · Click Construction → Click Quality Check
+  · Click Quality Check → Click Final Inspection
+  · Click Final Inspection → Click Project Complete
+· Click Link button again to turn it off
+
+Step 5: Create Calendar
+
+· Click Enterprise → Calendars
+· Click Add button
+· Type name: My Exam Calendar
+· Click Workweek tab in bottom pane
+· Ensure Mon-Fri are white (working), Sat-Sun are grey (non-working)
+· Go back: Click Enterprise → Projects
+· Select your project "My First Project"
+· In bottom pane, Defaults section, find Project Calendar
+· Select My Exam Calendar from dropdown
+
+Step 6: Create Resources
+
+· Click Enterprise → Resources
+· Click Add button 4 times
+· Type these exactly:
+  1. Name: Project Manager → Type: Labor
+  2. Name: Site Engineer → Type: Labor
+  3. Name: Construction Team → Type: Labor
+  4. Name: Crane → Type: Nonlabor
+
+Step 7: Assign Resources
+
+· Click Activities button to go back to tasks
+· Select task 1: Project Kickoff
+· In bottom pane, click Resources tab
+· Click Assign button → Select Project Manager → Click OK
+· Select task 2: Site Survey
+· Click Assign → Select Site Engineer → OK
+· Select task 5: Construction
+· Click Assign → Select Construction Team → OK
+· Click Assign again → Select Crane → OK
+
+Step 8: Create Baseline
+
+· Click Project (top menu) → Maintain Baselines
+· Click Add button
+· Name: Original Baseline
+· Click OK
+· Select Original Baseline from list
+· Click Assign button on toolbar
+· Close the window (click X)
+
+---
+
+PART 2: EXECUTE AND MONITOR
+
+Step 1: Update Progress
+
+· In Activities page, find Activity % Complete column
+· Type these values:
+  · Project Kickoff: 100
+  · Site Survey: 100
+  · Design Phase: 50
+  · All other tasks: 0
+· Press Enter after each
+
+Step 2: Add Baseline Columns
+
+· Right-click on Activity Name column header
+· Click Columns
+· On left side, find and select these (one by one):
+  · Baseline Start
+  · Baseline Finish
+  · Actual Start
+  · Actual Finish
+· For each one, click Add >> button
+· Click OK
+
+Step 3: Check Critical Path
+
+· Look at your tasks - red-colored tasks are on Critical Path
+· Click Filter dropdown (toolbar) → Select Critical
+· Only red tasks are visible now
+· Click Filter → Select All Activities to see all tasks again
+
+Step 4: Check Resources
+· Click View → Resources → Resource Usage Spreadsheet
+· Look for any red numbers (over-allocated resources)
+· Click Activities button to return to tasks
+
+---
+
+PART 3: DASHBOARD AND REPORTS
+
+Step 1: Create Dashboard
+
+· Click Reports → Dashboards
+· Click Add button
+· Name: My Exam Dashboard
+· Click Add Portlet button
+· Select Gantt Chart → Click Add
+· Select Cost Distribution → Click Add
+· Select Activities Starting Soon → Click Add
+· Click Close
+
+Step 2: Generate Reports
+
+· Click Reports → Reports
+· In reports list, find and select Milestone Report
+· Click Run button (on toolbar)
+· Report will generate - you can see it previews correctly
+· Close the report preview window
+· Select Resource Assignment Detail report
+· Click Run button
+· Close the preview
+· Select Cost Report
+· Click Run button
+· Close the preview
+· Close the Reports window
+
+Step 3: Find Slipping Tasks
+
+· In Activities page, click Filter dropdown → More Filters
+· Find and select Slipping Tasks
+· Click Apply
+
+---
+
+YOU ARE DONE! ✅
+
+What You Have Accomplished:
+
+· ✅ Created a complete project with tasks
+· ✅ Set durations and dependencies
+· ✅ Created milestones
+· ✅ Made a project calendar
+· ✅ Created resources and assigned them
+· ✅ Saved a baseline
+· ✅ Updated project progress
+· ✅ Compared planned vs actual
+· ✅ Viewed critical path
+· ✅ Checked resource allocation
+· ✅ Created a dashboard with 3 portlets
+· ✅ Generated 3 different reports
+· ✅ Found slipping tasks
+
+Final Check:
+
+· Your project should have a Gantt chart showing all tasks
+· Two tasks should have 0 duration (milestones)
+· Some tasks should show progress (50%, 100%)
+· Your dashboard should show three sections
+· All reports should have generated without errors
+
+You have successfully completed all the practical requirements! Just follow this script exactly and you'll be fine in your exam. Good luck! 🍀

@@ -1,0 +1,61 @@
+DLL- 
+
+g++ -fPIC -c MathLibrary.cpp -o MathLibrary.o
+
+g++ -shared -o libmath.so MathLibrary.o
+
+g++ main.cpp -L. -lmath -o main
+
+LD_LIBRARY_PATH=. ./main
+
+If 4th command doesn't work- 
+export LD_LIBRARY_PATH=.
+./main
+
+MathLibrary.h - 
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int add(int a, int b);
+int subtract(int a, int b);
+
+#ifdef __cplusplus
+}
+#endif
+
+MathLibrary.cpp - 
+#include "MathLibrary.h"
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int subtract(int a, int b) {
+    return a - b;
+}
+
+main.cpp - 
+#include <iostream>
+#include "MathLibrary.h"
+
+int main() {
+    std::cout << "Add: " << add(4, 3) << std::endl;
+    std::cout << "Subtract: " << subtract(4, 3) << std::endl;
+    return 0;
+}
+
+Commands-
+# 1. Create object file
+g++ -fPIC -c MathLibrary.cpp -o MathLibrary.o
+
+# 2. Create shared library
+g++ -shared -o libmath.so MathLibrary.o
+
+# 3. Compile main program
+g++ main.cpp -L. -lmath -o main
+
+# 4. Run the program
+LD_LIBRARY_PATH=. ./main

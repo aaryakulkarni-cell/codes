@@ -1,0 +1,244 @@
+Memory allocation - 
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct MemoryBlock {
+    int id;
+    int size;
+    bool allocated;
+    int processId;
+};
+
+struct Process {
+    int id;
+    int size;
+    bool allocated;
+};
+
+// Function to display memory status
+void displayMemory(vector<MemoryBlock>& memory) {
+    cout << "\nMemory Blocks:" << endl;
+    cout << "Block ID\tSize\tStatus\t\tProcess ID" << endl;
+    cout << "----------------------------------------" << endl;
+    for(auto& block : memory) {
+        cout << block.id << "\t\t" << block.size << "\t";
+        if(block.allocated) {
+            cout << "Allocated\t" << block.processId;
+        } else {
+            cout << "Free\t\t-";
+        }
+        cout << endl;
+    }
+}
+
+// 1. First Fit Algorithm
+void firstFit(vector<MemoryBlock>& memory, vector<Process>& processes) {
+    cout << "\n=== FIRST FIT ALGORITHM ===" << endl;
+    
+    for(auto& process : processes) {
+        if(process.allocated) continue;
+        
+        for(auto& block : memory) {
+            if(!block.allocated && block.size >= process.size) {
+                block.allocated = true;
+                block.processId = process.id;
+                process.allocated = true;
+                cout << "Process " << process.id << " (" << process.size 
+                     << "KB) allocated to Block " << block.id << " (" << block.size << "KB)" << endl;
+                break;
+            }
+        }
+        
+        if(!process.allocated) {
+            cout << "Process " << process.id << " (" << process.size 
+                 << "KB) could not be allocated" << endl;
+        }
+    }
+    
+    displayMemory(memory);
+}
+
+// 2. Best Fit Algorithm
+void bestFit(vector<MemoryBlock>& memory, vector<Process>& processes) {
+    cout << "\n=== BEST FIT ALGORITHM ===" << endl;
+    
+    for(auto& process : processes) {
+        if(process.allocated) continue;
+        
+        int bestBlock = -1;
+        int minSize = 9999;
+        
+        // Find the smallest sufficient block
+        for(int i = 0; i < memory.size(); i++) {
+            if(!memory[i].allocated && memory[i].size >= process.size) {
+                if(memory[i].size < minSize) {
+                    minSize = memory[i].size;
+                    bestBlock = i;
+                }
+            }
+        }
+        
+        if(bestBlock != -1) {
+            memory[bestBlock].allocated = true;
+            memory[bestBlock].processId = process.id;
+            process.allocated = true;
+            cout << "Process " << process.id << " (" << process.size 
+                 << "KB) allocated to Block " << memory[bestBlock].id 
+                 << " (" << memory[bestBlock].size << "KB)" << endl;
+        } else {
+            cout << "Process " << process.id << " (" << process.size 
+                 << "KB) could not be allocated" << endl;
+        }
+    }
+    
+    displayMemory(memory);
+}
+
+// 3. Worst Fit Algorithm
+void worstFit(vector<MemoryBlock>& memory, vector<Process>& processes) {
+    cout << "\n=== WORST FIT ALGORITHM ===" << endl;
+    
+    for(auto& process : processes) {
+        if(process.allocated) continue;
+        
+        int worstBlock = -1;
+        int maxSize = -1;
+        
+        // Find the largest sufficient block
+        for(int i = 0; i < memory.size(); i++) {
+            if(!memory[i].allocated && memory[i].size >= process.size) {
+                if(memory[i].size > maxSize) {
+                    maxSize = memory[i].size;
+                    worstBlock = i;
+                }
+            }
+        }
+        
+        if(worstBlock != -1) {
+            memory[worstBlock].allocated = true;
+            memory[worstBlock].processId = process.id;
+            process.allocated = true;
+            cout << "Process " << process.id << " (" << process.size
+            << "KB) allocated to Block " << memory[worstBlock].id 
+                 << " (" << memory[worstBlock].size << "KB)" << endl;
+        } else {
+            cout << "Process " << process.id << " (" << process.size 
+                 << "KB) could not be allocated" << endl;
+        }
+    }
+    
+    displayMemory(memory);
+}
+
+// 4. Next Fit Algorithm
+void nextFit(vector<MemoryBlock>& memory, vector<Process>& processes) {
+    cout << "\n=== NEXT FIT ALGORITHM ===" << endl;
+    
+    int lastAllocated = 0;
+    
+    for(auto& process : processes) {
+        if(process.allocated) continue;
+        
+        bool allocated = false;
+        int start = lastAllocated;
+        
+        // Search from last allocated position
+        for(int i = 0; i < memory.size(); i++) {
+            int current = (start + i) % memory.size();
+            
+            if(!memory[current].allocated && memory[current].size >= process.size) {
+                memory[current].allocated = true;
+                memory[current].processId = process.id;
+                process.allocated = true;
+                lastAllocated = current;
+                allocated = true;
+                cout << "Process " << process.id << " (" << process.size 
+                     << "KB) allocated to Block " << memory[current].id 
+                     << " (" << memory[current].size << "KB)" << endl;
+                break;
+            }
+        }
+        
+        if(!allocated) {
+            cout << "Process " << process.id << " (" << process.size 
+                 << "KB) could not be allocated" << endl;
+        }
+    }
+    
+    displayMemory(memory);
+}
+
+// Reset memory and processes for new algorithm
+void resetAllocation(vector<MemoryBlock>& memory, vector<Process>& processes) {
+    for(auto& block : memory) {
+        block.allocated = false;
+        block.processId = -1;
+    }
+    for(auto& process : processes) {
+        process.allocated = false;
+    }
+}
+
+int main() {
+    int numBlocks, numProcesses;
+    vector<MemoryBlock> memory;
+    vector<Process> processes;
+    
+    cout << "MEMORY PLACEMENT STRATEGIES" << endl;
+    cout << "===========================" << endl;
+    
+    // Get memory blocks
+    cout << "Enter number of memory blocks: ";
+    cin >> numBlocks;
+    
+    for(int i = 0; i < numBlocks; i++) {
+        MemoryBlock block;
+        block.id = i + 1;
+        cout << "Enter size of Block " << block.id << " (KB): ";
+        cin >> block.size;
+        block.allocated = false;
+        block.processId = -1;
+        memory.push_back(block);
+    }
+    
+    // Get processes
+    cout << "\nEnter number of processes: ";
+    cin >> numProcesses;
+    
+    for(int i = 0; i < numProcesses; i++) {
+        Process process;
+        process.id = i + 1;
+        cout << "Enter size of Process " << process.id << " (KB): ";
+        cin >> process.size;
+        process.allocated = false;
+        processes.push_back(process);
+    }
+    
+    // Display initial memory
+    cout << "\n=== INITIAL MEMORY STATE ===";
+    displayMemory(memory);
+    
+    // Run all algorithms
+    firstFit(memory, processes);
+    resetAllocation(memory, processes);
+    
+    bestFit(memory, processes);
+    resetAllocation(memory, processes);
+    
+    worstFit(memory, processes);
+    resetAllocation(memory, processes);
+    
+    nextFit(memory, processes);
+    
+    return 0;
+}
+
+Command - 
+# Compile
+g++ memory.cpp -o memory
+
+# Run
+./memory

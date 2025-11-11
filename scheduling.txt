@@ -1,0 +1,275 @@
+Scheduling algo - 
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+#include <queue>
+using namespace std;
+
+struct Process {
+    int id;
+    int arrivalTime;
+    int burstTime;
+    int priority;
+    int remainingTime;
+    int completionTime;
+    int turnaroundTime;
+    int waitingTime;
+};
+
+// Function to calculate and display results
+void calculateResults(vector<Process>& processes) {
+    float totalTAT = 0, totalWT = 0;
+    float throughput;
+    
+    cout << "\nPID\tAT\tBT\tPri\tCT\tTAT\tWT" << endl;
+    cout << "----------------------------------------" << endl;
+    
+    for(auto& p : processes) {
+        p.turnaroundTime = p.completionTime - p.arrivalTime;
+        p.waitingTime = p.turnaroundTime - p.burstTime;
+        
+        cout << p.id << "\t" << p.arrivalTime << "\t" << p.burstTime << "\t" 
+             << p.priority << "\t" << p.completionTime << "\t" 
+             << p.turnaroundTime << "\t" << p.waitingTime << endl;
+        
+        totalTAT += p.turnaroundTime;
+        totalWT += p.waitingTime;
+    }
+    
+    // Calculate throughput
+    int maxCompletionTime = 0;
+    for(auto& p : processes) {
+        if(p.completionTime > maxCompletionTime) {
+            maxCompletionTime = p.completionTime;
+        }
+    }
+    throughput = (float)processes.size() / maxCompletionTime;
+    
+    cout << fixed << setprecision(2);
+    cout << "\n=== RESULTS ===" << endl;
+    cout << "Average Turnaround Time: " << totalTAT / processes.size() << endl;
+    cout << "Average Waiting Time: " << totalWT / processes.size() << endl;
+    cout << "Throughput: " << throughput << " processes/unit time" << endl;
+}
+
+// 1. FCFS Scheduling
+void FCFS(vector<Process> processes) {
+    cout << "\n=== FCFS Scheduling ===" << endl;
+    
+    // Sort by arrival time
+    sort(processes.begin(), processes.end(), [](Process a, Process b) {
+        return a.arrivalTime < b.arrivalTime;
+    });
+    
+    int currentTime = 0;
+    for(auto& p : processes) {
+        if(currentTime < p.arrivalTime) {
+            currentTime = p.arrivalTime;
+        }
+        p.completionTime = currentTime + p.burstTime;
+        currentTime = p.completionTime;
+    }
+    
+    calculateResults(processes);
+}
+
+// 2. SJF Preemptive Scheduling
+void SJF_Preemptive(vector<Process> processes) {
+    cout << "\n=== SJF (Preemptive) Scheduling ===" << endl;
+    
+    int n = processes.size();
+    int currentTime = 0;
+    int completed = 0;
+    
+    // Initialize remaining time
+    for(auto& p : processes) {
+        p.remainingTime = p.burstTime;
+    }
+    
+    while(completed < n) {
+        int shortest = -1;
+        int minTime = 9999;
+        
+        // Find process with shortest remaining time
+        for(int i = 0; i < n; i++) {
+            if(processes[i].arrivalTime <= currentTime && processes[i].remainingTime > 0) {
+                if(processes[i].remainingTime < minTime) {
+                    minTime = processes[i].remainingTime;
+                    shortest = i;
+                }
+            }
+        }
+        
+        if(shortest == -1) {
+            currentTime++;
+            continue;
+        }
+        
+        // Execute for 1 unit time
+        processes[shortest].remainingTime--;
+        currentTime++;
+        
+        // Check if process completed
+        if(processes[shortest].remainingTime == 0) {
+            completed++;
+            processes[shortest].completionTime = currentTime;
+        }
+    }
+    
+    calculateResults(processes);
+}
+
+// 3. Priority Non-Preemptive Scheduling
+void Priority_NonPreemptive(vector<Process> processes) {
+    cout << "\n=== Priority (Non-Preemptive) Scheduling ===" << endl;
+    
+    int n = processes.size();
+    vector<bool> completed(n, false);
+    int currentTime = 0;
+    int completedCount = 0;
+    
+    while(completedCount < n) {
+        int highestPriority = -1;
+        int minPriority = 9999;
+        
+        // Find process with highest priority (lower number = higher priority)
+        for(int i = 0; i < n; i++) {
+            if(!completed[i] && processes[i].arrivalTime <= currentTime) {
+                if(processes[i].priority < minPriority) {
+                    minPriority = processes[i].priority;
+                    highestPriority = i;
+                }
+            }
+        }
+        
+        if(highestPriority == -1) {
+            currentTime++;
+            continue;
+        }
+        
+        // Execute the process
+        processes[highestPriority].completionTime = currentTime + processes[highestPriority].burstTime;
+        currentTime = processes[highestPriority].completionTime;
+        completed[highestPriority] = true;
+        completedCount++;
+    }
+    
+    calculateResults(processes);
+}
+
+// 4. Round Robin Preemptive Scheduling
+void RoundRobin(vector<Process> processes, int timeQuantum) {
+    cout << "\n=== Round Robin (Preemptive) Scheduling ===" << endl;
+    cout << "Time Quantum: " << timeQuantum << endl;
+    
+    int n = processes.size();
+    queue<int> readyQueue;
+    vector<bool> inQueue(n, false);
+    vector<int> remainingTime(n);
+    
+    // Initialize remaining times
+    for(int i = 0; i < n; i++) {
+        remainingTime[i] = processes[i].burstTime;
+    }
+    
+    int currentTime = 0;
+    int completed = 0;
+    
+    // Add first arriving processes to queue
+    for(int i = 0; i < n; i++) {
+        if(processes[i].arrivalTime <= currentTime) {
+            readyQueue.push(i);
+            inQueue[i] = true;
+        }
+    }
+    
+    while(completed < n) {
+        if(readyQueue.empty()) {
+            currentTime++;
+            // Check for new arrivals
+            for(int i = 0; i < n; i++) {
+                if(processes[i].arrivalTime <= currentTime && !inQueue[i] && remainingTime[i] > 0) {
+                    readyQueue.push(i);
+                    inQueue[i] = true;
+                }
+            }
+            continue;
+        }
+        
+        int current = readyQueue.front();
+        readyQueue.pop();
+        inQueue[current] = false;
+        
+        // Execute for time quantum or until completion
+        int executionTime = min(timeQuantum, remainingTime[current]);
+        remainingTime[current] -= executionTime;
+        currentTime += executionTime;
+        
+        // Check for new arrivals during execution
+        for(int i = 0; i < n; i++) {
+            if(processes[i].arrivalTime <= currentTime && !inQueue[i] && remainingTime[i] > 0) {
+                readyQueue.push(i);
+                inQueue[i] = true;
+            }
+        }
+        
+        // If process not completed, add back to queue
+        if(remainingTime[current] > 0) {
+            readyQueue.push(current);
+            inQueue[current] = true;
+        } else {
+            // Process completed
+            completed++;
+            processes[current].completionTime = currentTime;
+        }
+    }
+    
+    calculateResults(processes);
+}
+
+int main() {
+    int n, timeQuantum;
+    vector<Process> processes;
+    
+    cout << "CPU SCHEDULING ALGORITHMS" << endl;
+    cout << "=========================" << endl;
+    
+    // Get number of processes
+    cout << "Enter number of processes: ";
+    cin >> n;
+    
+    // Get process details
+    for(int i = 0; i < n; i++) {
+        Process p;
+        p.id = i + 1;
+        cout << "\nProcess " << p.id << ":" << endl;
+        cout << "Enter Arrival Time: ";
+        cin >> p.arrivalTime;
+        cout << "Enter Burst Time: ";
+        cin >> p.burstTime;
+        cout << "Enter Priority (lower number = higher priority): ";
+        cin >> p.priority;
+        processes.push_back(p);
+    }
+    
+    // Get time quantum for Round Robin
+    cout << "\nEnter Time Quantum for Round Robin: ";
+    cin >> timeQuantum;
+    
+    // Run all 4 algorithms
+    FCFS(processes);
+    SJF_Preemptive(processes);
+    Priority_NonPreemptive(processes);
+    RoundRobin(processes, timeQuantum);
+    
+    return 0;
+}
+
+Compile -
+# Compile
+g++ scheduling.cpp -o scheduling
+
+# Run
+./scheduling
