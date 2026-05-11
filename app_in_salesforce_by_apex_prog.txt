@@ -1,0 +1,515 @@
+🧪 Salesforce + Apex Practical — Complete Spoon-Feeding Guide
+
+This practical sounds difficult because of words like:
+
+“Salesforce”
+
+“Apex”
+
+“Application”
+
+
+But in reality, tomorrow you’ll mostly: ✅ Create a simple object
+✅ Write a small Apex program
+✅ Run it
+✅ Show output
+
+That’s it.
+
+
+---
+
+🎯 WHAT YOU ARE ACTUALLY DOING
+
+You are creating a very small cloud-based application inside:
+
+Salesforce Platform
+
+using Apex (Salesforce programming language)
+
+
+
+---
+
+🧠 VERY IMPORTANT BASIC CONCEPTS (MEMORIZE)
+
+☁️ What is Salesforce?
+
+> Salesforce is a cloud-based CRM platform used to manage customer and business data.
+
+
+
+
+---
+
+☁️ What is Apex?
+
+> Apex is a programming language used in Salesforce for backend logic and automation.
+
+
+
+
+---
+
+☁️ What is CRM?
+
+> CRM stands for Customer Relationship Management.
+
+
+
+
+---
+
+☁️ What is an Object in Salesforce?
+
+> Object is like a database table used to store records.
+
+
+
+
+---
+
+☁️ What is a Field?
+
+> Field is a column inside an object.
+
+
+
+
+---
+
+🎯 WHAT YOU WILL DO IN PRACTICAL
+
+You will:
+
+1. Login to Salesforce
+
+
+2. Create a custom object
+
+
+3. Add fields
+
+
+4. Write Apex code
+
+
+5. Run code
+
+
+6. Show output
+
+
+
+DONE.
+
+
+---
+
+📝 WHAT TO WRITE IN PRACTICAL FILE
+
+
+---
+
+1. Aim
+
+> To create an application in Salesforce using Apex programming language.
+
+
+
+
+---
+
+2. Theory
+
+What is Salesforce?
+
+Salesforce is a cloud computing platform used for CRM and application development.
+
+What is Apex?
+
+Apex is an object-oriented programming language provided by Salesforce.
+
+
+---
+
+3. Requirements
+
+Salesforce Developer Account
+
+Internet connection
+
+Developer Console
+
+
+
+---
+
+4. Procedure
+
+(Write steps below)
+
+
+---
+
+🧪 EXACT PRACTICAL EXECUTION (VERY IMPORTANT)
+
+✅ STEP 1 — Login to Salesforce
+
+Open: Salesforce Developer Signup
+
+Login.
+
+
+---
+
+✅ STEP 2 — Open Setup
+
+Top-right:
+
+⚙ Setup
+
+Click:
+
+Setup
+
+
+---
+
+✅ STEP 3 — Create Custom Object
+
+Search:
+
+Object Manager
+
+Open it.
+
+Click:
+
+Create → Custom Object
+
+
+---
+
+✅ STEP 4 — Fill Object Details
+
+Fill:
+
+Field	Value
+
+Label	Student
+Plural Label	Students
+Object Name	Student
+
+
+Click:
+
+Save
+
+
+---
+
+✅ STEP 5 — Create Fields
+
+Inside Student object:
+
+Click:
+
+Fields & Relationships
+
+Then:
+
+New
+
+Create these fields.
+
+
+---
+
+Field 1
+
+Type:
+
+Text
+
+Field Name:
+
+Student_Name
+
+Save.
+
+
+---
+
+Field 2
+
+Type:
+
+Number
+
+Field Name:
+
+Marks
+
+Save.
+
+
+---
+
+✅ STEP 6 — Open Developer Console
+
+Top-right profile/settings area.
+
+Click:
+
+Developer Console
+
+New window opens.
+
+
+---
+
+✅ STEP 7 — Create Apex Class
+
+In Developer Console:
+
+Click:
+
+File → New → Apex Class
+
+Name:
+
+StudentResult
+
+Click OK.
+
+
+---
+
+✅ STEP 8 — Write Apex Code
+
+Delete existing code and paste this EXACT code:
+
+public class StudentResult {
+
+    public static void checkResult(Integer marks) {
+
+        if(marks >= 40) {
+            System.debug('PASS');
+        }
+        else {
+            System.debug('FAIL');
+        }
+    }
+}
+
+
+---
+
+✅ STEP 9 — Save Code
+
+Press:
+
+Ctrl + S
+
+OR File → Save.
+
+
+---
+
+✅ STEP 10 — Execute Program
+
+Click:
+
+Debug → Open Execute Anonymous Window
+
+Paste:
+
+StudentResult.checkResult(55);
+
+Click:
+
+Execute
+
+
+---
+
+✅ STEP 11 — Check Output
+
+Bottom/logs area opens.
+
+Search:
+
+PASS
+
+If PASS visible: 🎉 Practical successful.
+
+
+---
+
+📄 WHAT TO WRITE IN OUTPUT SECTION
+
+> Apex program executed successfully and displayed PASS result.
+
+
+
+
+---
+
+📌 ADVANTAGES OF SALESFORCE
+
+Cloud-based
+
+Easy application development
+
+Secure
+
+Scalable
+
+
+
+---
+
+📌 DISADVANTAGES
+
+Internet dependency
+
+Paid services
+
+Learning curve
+
+
+
+---
+
+📌 CONCLUSION
+
+> Successfully created a Salesforce application using Apex programming language.
+
+
+
+
+---
+
+🎤 VIVA QUESTIONS & ANSWERS
+
+
+---
+
+Q1. What is Salesforce?
+
+> Salesforce is a cloud-based CRM platform.
+
+
+
+
+---
+
+Q2. What is Apex?
+
+> Apex is an object-oriented programming language used in Salesforce.
+
+
+
+
+---
+
+Q3. What is CRM?
+
+> CRM stands for Customer Relationship Management.
+
+
+
+
+---
+
+Q4. What is a custom object?
+
+> Custom object is a user-created database table in Salesforce.
+
+
+
+
+---
+
+Q5. What is a field?
+
+> Field is a column inside an object.
+
+
+
+
+---
+
+Q6. What is Developer Console?
+
+> Developer Console is a tool used to write and execute Apex code.
+
+
+
+
+---
+
+Q7. What is System.debug()?
+
+> It is used to print output in logs.
+
+
+
+
+---
+
+Q8. What output did you get?
+
+> PASS.
+
+
+
+
+---
+
+Q9. Why use Salesforce?
+
+> Salesforce is used for cloud application development and CRM management.
+
+
+
+
+---
+
+Q10. Is Apex similar to Java?
+
+> Yes, Apex syntax is similar to Java.
+
+
+
+
+---
+
+🎯 MOST IMPORTANT MEMORY FLOW
+
+Memorize this one line:
+
+Object Manager → Create Object → Add Fields → Developer Console → Apex Class → Execute
+
+That one line is basically the entire practical.
+
+
+---
+
+⚠️ IMPORTANT REALITY
+
+The Salesforce interface may look slightly different tomorrow, BUT:
+
+Object Manager
+
+Developer Console
+
+Apex Class
+
+Execute Anonymous Window
+
+
+all definitely exist.
+
+So don’t panic if colors/layout differ slightly.

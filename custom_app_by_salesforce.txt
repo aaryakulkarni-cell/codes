@@ -1,0 +1,608 @@
+🧪 Salesforce Custom Application (Mini Project) — Complete Spoon-Feeding Guide
+
+This practical is basically: ✅ Creating a small application in Salesforce Platform
+✅ Adding objects and fields
+✅ Showing records/data
+✅ (Optional) small Apex logic
+
+It is NOT a huge software project.
+
+
+---
+
+🎯 WHAT YOU ARE ACTUALLY MAKING
+
+You will create a simple:
+
+📚 Student Management Application
+
+because it is easiest.
+
+Your app will:
+
+Store student data
+
+Show records
+
+Optionally check result using Apex
+
+
+That’s enough for practical exam.
+
+
+---
+
+🧠 BASIC CONCEPTS (MEMORIZE)
+
+☁️ What is Salesforce Cloud?
+
+> Salesforce Cloud is a cloud platform used for CRM and application development.
+
+
+
+
+---
+
+☁️ What is a Custom Application?
+
+> A custom application is a user-created application designed for specific tasks.
+
+
+
+
+---
+
+☁️ What is an Object?
+
+> Object is a database table.
+
+
+
+
+---
+
+☁️ What is a Record?
+
+> Record is a row/data entry inside object.
+
+
+
+
+---
+
+🎯 WHAT YOU WILL DO IN PRACTICAL
+
+You will:
+
+1. Create App
+
+
+2. Create Object
+
+
+3. Add Fields
+
+
+4. Add Tab
+
+
+5. Insert Records
+
+
+6. (Optional) Run Apex
+
+
+
+DONE.
+
+
+---
+
+📝 WHAT TO WRITE IN PRACTICAL FILE
+
+
+---
+
+1. Aim
+
+> To design and develop a custom application using Salesforce Cloud.
+
+
+
+
+---
+
+2. Theory
+
+What is Salesforce Cloud?
+
+Salesforce Cloud is a cloud-based platform for CRM and application development.
+
+What is Custom Application?
+
+A custom application is created according to user requirements using Salesforce tools.
+
+
+---
+
+3. Requirements
+
+Salesforce Developer Account
+
+Internet connection
+
+
+
+---
+
+4. Procedure
+
+(Write steps below)
+
+
+---
+
+🧪 EXACT PRACTICAL EXECUTION (MOST IMPORTANT)
+
+✅ STEP 1 — Login to Salesforce
+
+Open: Salesforce Developer Signup
+
+Login.
+
+
+---
+
+✅ STEP 2 — Open Setup
+
+Top-right:
+
+⚙ Setup
+
+Click:
+
+Setup
+
+
+---
+
+✅ STEP 3 — Create New App
+
+Search:
+
+App Manager
+
+Open it.
+
+Click:
+
+New Lightning App
+
+
+---
+
+✅ STEP 4 — Fill App Details
+
+Fill:
+
+Field	Value
+
+App Name	Student Management App
+Description	Mini project using Salesforce
+
+
+Click:
+
+Next
+
+Keep clicking:
+
+Next
+
+until:
+
+Save & Finish
+
+
+---
+
+✅ STEP 5 — Create Custom Object
+
+Search:
+
+Object Manager
+
+Open.
+
+Click:
+
+Create → Custom Object
+
+
+---
+
+✅ STEP 6 — Fill Object Details
+
+Fill:
+
+Field	Value
+
+Label	Student
+Plural Label	Students
+Object Name	Student
+
+
+Click:
+
+Save
+
+
+---
+
+✅ STEP 7 — Create Fields
+
+Inside Student object:
+
+Click:
+
+Fields & Relationships
+
+Then:
+
+New
+
+Create these fields.
+
+
+---
+
+Field 1
+
+Type:
+
+Text
+
+Field Name:
+
+Student_Name
+
+Save.
+
+
+---
+
+Field 2
+
+Type:
+
+Number
+
+Field Name:
+
+Roll_Number
+
+Save.
+
+
+---
+
+Field 3
+
+Type:
+
+Number
+
+Field Name:
+
+Marks
+
+Save.
+
+
+---
+
+✅ STEP 8 — Create Tab
+
+Search:
+
+Tabs
+
+Open it.
+
+Click:
+
+New
+
+Choose:
+
+Student
+
+Keep clicking:
+
+Next → Next → Save
+
+
+---
+
+✅ STEP 9 — Add Tab to Application
+
+Go to:
+
+App Manager
+
+Find:
+
+Student Management App
+
+Click dropdown:
+
+▼ → Edit
+
+Go to:
+
+Navigation Items
+
+Add:
+
+Student
+
+Save.
+
+
+---
+
+✅ STEP 10 — Open Application
+
+Top-left App Launcher:
+
+☰
+
+Search:
+
+Student Management App
+
+Open it.
+
+
+---
+
+✅ STEP 11 — Add Student Record
+
+Open:
+
+Student Tab
+
+Click:
+
+New
+
+Fill example data:
+
+Field	Value
+
+Student Name	Rahul
+Roll Number	101
+Marks	85
+
+
+Click:
+
+Save
+
+🎉 Record created successfully.
+
+
+---
+
+✅ STEP 12 — (OPTIONAL BUT IMPRESSIVE) Add Apex Code
+
+Open:
+
+Developer Console
+
+Click:
+
+File → New → Apex Class
+
+Name:
+
+GradeCheck
+
+Paste:
+
+public class GradeCheck {
+
+    public static void checkMarks(Integer marks) {
+
+        if(marks >= 40) {
+            System.debug('PASS');
+        }
+        else {
+            System.debug('FAIL');
+        }
+    }
+}
+
+Save.
+
+
+---
+
+✅ STEP 13 — Execute Apex
+
+Click:
+
+Debug → Open Execute Anonymous Window
+
+Paste:
+
+GradeCheck.checkMarks(85);
+
+Execute.
+
+Search logs for:
+
+PASS
+
+DONE.
+
+
+---
+
+📄 WHAT TO WRITE IN OUTPUT SECTION
+
+> Student Management Application created successfully using Salesforce Cloud.
+
+
+
+
+---
+
+📌 ADVANTAGES
+
+Easy cloud application development
+
+Secure
+
+Scalable
+
+No local installation
+
+
+
+---
+
+📌 DISADVANTAGES
+
+Internet dependency
+
+Paid services
+
+Learning curve
+
+
+
+---
+
+📌 CONCLUSION
+
+> Successfully designed and developed a custom application using Salesforce Cloud.
+
+
+
+
+---
+
+🎤 VIVA QUESTIONS & ANSWERS
+
+
+---
+
+Q1. What is Salesforce?
+
+> Salesforce is a cloud-based CRM and application development platform.
+
+
+
+
+---
+
+Q2. What is a custom application?
+
+> A user-created application developed according to specific requirements.
+
+
+
+
+---
+
+Q3. What is an object?
+
+> Object is a database table used to store records.
+
+
+
+
+---
+
+Q4. What is a field?
+
+> Field is a column inside object.
+
+
+
+
+---
+
+Q5. What is Apex?
+
+> Apex is a programming language used in Salesforce.
+
+
+
+
+---
+
+Q6. What is a record?
+
+> Record is a row of data inside object.
+
+
+
+
+---
+
+Q7. What is App Launcher?
+
+> App Launcher is used to open applications in Salesforce.
+
+
+
+
+---
+
+Q8. What mini project did you create?
+
+> Student Management Application.
+
+
+
+
+---
+
+Q9. Why use Salesforce Cloud?
+
+> For cloud-based application development and CRM management.
+
+
+
+
+---
+
+🎯 MOST IMPORTANT MEMORY FLOW
+
+Memorize this:
+
+App Manager → Create App → Object Manager → Create Object → Add Fields → Create Tab → Add Record
+
+That one line is basically the whole practical.
+
+
+---
+
+⚠️ IMPORTANT REALITY
+
+Tomorrow the UI may look slightly different, but:
+
+App Manager
+
+Object Manager
+
+Tabs
+
+Developer Console
+
+
+will definitely exist.
+
+So don’t panic.

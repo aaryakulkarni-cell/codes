@@ -1,0 +1,655 @@
+This practical is again mostly about: ✅ Creating a cloud environment
+✅ Deploying a very simple application
+✅ Showing it runs successfully
+
+You are NOT expected to build a big application.
+
+
+---
+
+🎯 What is Google App Engine ?
+
+Google App Engine (GAE) is a cloud service by Google Cloud used to:
+
+Deploy web applications
+
+Run apps without managing servers
+
+
+👉 Simple meaning:
+
+> Google gives you a platform to run your website/app online.
+
+
+
+
+---
+
+🧠 What this practical actually expects
+
+You have to:
+
+1. Open Google Cloud
+
+
+2. Create App Engine project
+
+
+3. Install/configure required tools
+
+
+4. Deploy a simple app
+
+
+5. Show application running
+
+
+
+That’s it.
+
+
+---
+
+🎯 EASIEST METHOD FOR PRACTICAL (BEST FOR BEGINNERS)
+
+We’ll use: ✅ Python Hello World app
+because it is simplest.
+
+
+---
+
+📝 WHAT TO WRITE IN PRACTICAL FILE
+
+
+---
+
+1. Aim
+
+> To install and configure Google App Engine and deploy a sample application.
+
+
+
+
+---
+
+2. Theory
+
+What is Google App Engine?
+
+Google App Engine is a Platform as a Service (PaaS) provided by Google Cloud for developing and hosting web applications.
+
+Features
+
+Automatic scaling
+
+Easy deployment
+
+No server management
+
+Secure cloud hosting
+
+
+
+---
+
+3. Architecture Diagram
+
+Draw simple diagram:
+
+User → Internet → Google Cloud → App Engine Application
+
+
+---
+
+4. Requirements
+
+Google account
+
+Internet connection
+
+Google Cloud SDK
+
+
+
+---
+
+5. Procedure
+
+(You’ll write steps below)
+
+
+---
+
+🧪 EXACT PRACTICAL EXECUTION (SPOON FEEDING)
+
+✅ STEP 1 — Open Google Cloud
+
+Open: Google Cloud Console
+
+Login with Gmail account.
+
+
+---
+
+✅ STEP 2 — Create New Project
+
+Top bar → click project dropdown.
+
+Click:
+
+New Project
+
+Project name:
+
+MyGAEProject
+
+Click:
+
+Create
+
+Wait.
+
+
+---
+
+✅ STEP 3 — Search App Engine
+
+Search:
+
+App Engine
+
+Click:
+
+App Engine
+
+
+---
+
+✅ STEP 4 — Create App Engine Application
+
+Click:
+
+Create Application
+
+
+---
+
+✅ STEP 5 — Select Region
+
+Choose nearby region like:
+
+asia-south1
+
+Click:
+
+Next
+
+
+---
+
+✅ STEP 6 — Choose Language
+
+Select:
+
+Python
+
+Click:
+
+Done
+
+
+---
+
+✅ STEP 7 — Open Cloud Shell
+
+Top-right corner terminal icon:
+
+>_
+
+Click it.
+
+Wait for terminal to open at bottom.
+
+
+---
+
+✅ STEP 8 — Create Simple App
+
+Type these commands EXACTLY in terminal.
+
+
+---
+
+Create folder
+
+mkdir myapp
+cd myapp
+
+
+---
+
+Create Python file
+
+Type:
+
+nano main.py
+
+Paste this:
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello from Google App Engine'
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=8080, debug=True)
+
+Save:
+
+Ctrl + O
+
+Enter
+
+Ctrl + X
+
+
+
+---
+
+✅ STEP 9 — Create app.yaml
+
+Type:
+
+nano app.yaml
+
+Paste:
+
+runtime: python39
+
+Save same way.
+
+
+---
+
+✅ STEP 10 — Deploy Application
+
+Type:
+
+gcloud app deploy
+
+Press:
+
+Y
+
+Wait 2–5 minutes.
+
+
+---
+
+✅ STEP 11 — Open Application
+
+Type:
+
+gcloud app browse
+
+Browser opens.
+
+
+---
+
+🎉 OUTPUT
+
+You’ll see:
+
+Hello from Google App Engine
+
+DONE.
+
+
+---
+
+📄 WHAT TO WRITE IN OUTPUT SECTION
+
+> Sample Python application deployed successfully on Google App Engine.
+
+
+
+
+---
+
+📌 ADVANTAGES
+
+Easy deployment
+
+Automatic scaling
+
+No server management
+
+Reliable cloud hosting
+
+
+
+---
+
+📌 DISADVANTAGES
+
+Requires internet
+
+Limited free resources
+
+Vendor dependency
+
+
+
+---
+
+📌 CONCLUSION
+
+> Successfully installed and configured Google App Engine and deployed a sample application.
+
+
+
+
+---
+
+🧠 IMPORTANT VIVA QUESTIONS
+
+Q1. What is App Engine?
+
+> It is a PaaS service by Google Cloud for hosting applications.
+
+
+
+
+---
+
+Q2. What is PaaS?
+
+> Platform as a Service provides environment to develop and deploy applications.
+
+
+
+
+---
+
+Q3. Why use App Engine?
+
+> For easy cloud deployment without managing servers.
+
+
+
+
+---
+
+⚠️ IMPORTANT REALITY
+
+Sometimes Google Cloud asks for:
+
+Billing setup
+
+Verification
+
+
+Your college lab may already have configured accounts.
+
+If not, examiner may only ask:
+
+Theory
+
+Demonstration steps
+
+Screenshots
+
+
+
+---
+
+🎯 SIMPLE MEMORY FLOW
+
+Create Project → App Engine → Cloud Shell → Create Files → Deploy → Browse
+
+That’s the whole practical.
+
+Yes, the overall workflow is correct and follows the normal Google App Engine deployment process.
+
+But I need to tell you one important practical reality:
+
+⚠️ Sometimes colleges/labs already provide:
+
+preconfigured projects,
+
+different regions,
+
+or slightly different UI versions.
+
+
+So:
+
+The main buttons and flow remain the same
+
+But small interface differences can happen.
+
+
+The core flow definitely remains:
+
+Google Cloud → App Engine → Create App → Cloud Shell → Create Files → Deploy → Browse
+
+So don’t panic if colors/layout differ slightly.
+
+
+---
+
+⚠️ ONE IMPORTANT CORRECTION (VERY IMPORTANT)
+
+Before deploying, install Flask dependency.
+
+After creating app.yaml, type this too:
+
+pip install flask
+
+Then continue:
+
+gcloud app deploy
+
+This avoids deployment issues.
+
+
+---
+
+🧠 MOST IMPORTANT PRACTICAL COMMANDS
+
+Remember only these:
+
+mkdir myapp
+cd myapp
+nano main.py
+nano app.yaml
+pip install flask
+gcloud app deploy
+gcloud app browse
+
+That’s enough for practical.
+
+
+---
+
+🎤 VIVA QUESTIONS & ANSWERS (IMPORTANT)
+
+These are the MOST probable questions.
+
+
+---
+
+Q1. What is Google App Engine?
+
+> Google App Engine is a Platform as a Service (PaaS) provided by Google Cloud to develop and host web applications.
+
+
+
+
+---
+
+Q2. What is PaaS?
+
+> PaaS stands for Platform as a Service. It provides a platform to develop, run and deploy applications without managing servers.
+
+
+
+
+---
+
+Q3. What is cloud computing?
+
+> Cloud computing means delivering computing services like storage, servers and software over the internet.
+
+
+
+
+---
+
+Q4. What is the difference between IaaS and PaaS?
+
+IaaS	PaaS
+
+Provides virtual hardware	Provides platform for application deployment
+User manages OS	Provider manages OS
+Example: EC2	Example: App Engine
+
+
+
+---
+
+Q5. Why is App Engine called serverless?
+
+> Because developers do not manage physical servers manually. Google handles infrastructure automatically.
+
+
+
+
+---
+
+Q6. What language did you use?
+
+> Python.
+
+
+
+
+---
+
+Q7. What is app.yaml?
+
+> It is a configuration file used by App Engine to define runtime environment.
+
+
+
+
+---
+
+Q8. What is Flask?
+
+> Flask is a lightweight Python web framework used to create web applications.
+
+
+
+
+---
+
+Q9. What command is used to deploy application?
+
+gcloud app deploy
+
+
+---
+
+Q10. What command opens deployed application?
+
+gcloud app browse
+
+
+---
+
+Q11. Advantages of App Engine?
+
+> Easy deployment
+
+Automatic scaling
+
+No server management
+
+Secure hosting
+
+
+
+
+
+---
+
+Q12. Disadvantages of App Engine?
+
+> Internet dependency
+
+Limited free resources
+
+Vendor lock-in
+
+
+
+
+
+---
+
+Q13. What is runtime in App Engine?
+
+> Runtime specifies programming language environment like Python, Java or Node.js.
+
+
+
+
+---
+
+Q14. What is Google Cloud SDK?
+
+> It is a set of command-line tools used to manage Google Cloud services.
+
+
+
+
+---
+
+Q15. What output did you get?
+
+> “Hello from Google App Engine” webpage displayed successfully.
+
+
+
+
+---
+
+🎯 WHAT EXAMINER MOSTLY EXPECTS
+
+Not perfection.
+
+They mainly check: ✅ You know basic cloud concepts
+✅ You can follow deployment steps
+✅ Application runs successfully
+✅ You know simple viva answers
+
+That’s all.
+
+
+---
+
+🧠 SUPER SHORT LAST-MINUTE MEMORY TRICK
+
+EC2:
+
+Launch → Connect → Install Apache → Open IP
+
+App Engine:
+
+Create Project → Cloud Shell → Create Files → Deploy → Browse
+
+Memorize these two lines and you can reconstruct most of the practical tomorrow.
