@@ -1,0 +1,29 @@
+#Part 1 - 
+import pandas as pd
+
+data = {
+    'gender': ['male','female','male','female','male'],
+    'marks': [80, 90, 70, 85, 60]
+}
+
+df = pd.DataFrame(data)
+
+df
+
+# Grouped statistics
+df.groupby('gender')['marks'].describe()
+
+# List of values per category (IMPORTANT)
+df.groupby('gender')['marks'].apply(list)
+
+
+#Part 2-
+df = pd.read_csv("IRIS.csv")
+
+df.head()
+
+# Statistics for each species
+df.groupby('species').describe()
+
+# Percentiles
+df.groupby('species')['sepal_length'].quantile([0.25, 0.5, 0.75])

@@ -1,0 +1,131 @@
+If no error-
+# Step 1: Import required libraries
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Download required resources (run once)
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+
+# Step 2: Sample document
+text = "I am learning data science and I love coding in Python"
+
+print("Original Text:")
+print(text)
+
+# Step 3: Tokenization
+tokens = word_tokenize(text)
+print("\nTokens:")
+print(tokens)
+
+# Step 4: Stopwords Removal
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+print("\nAfter Stopword Removal:")
+print(filtered_tokens)
+
+# Step 5: POS Tagging
+pos_tags = pos_tag(filtered_tokens)
+print("\nPOS Tags:")
+print(pos_tags)
+
+# Step 6: Stemming
+stemmer = PorterStemmer()
+stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
+
+print("\nAfter Stemming:")
+print(stemmed_words)
+
+# Step 7: Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+
+print("\nAfter Lemmatization:")
+print(lemmatized_words)
+
+# Step 8: TF-IDF Calculation
+documents = [text]   # can add more documents in list
+
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+print("\nTF-IDF Values:")
+print(tfidf_matrix.toarray())
+
+print("\nFeature Names (Words):")
+print(vectorizer.get_feature_names_out())
+
+if error-
+# Step 1: Import required libraries
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Download required resources (run once)
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('wordnet')
+
+# Step 2: Sample document
+text = "I am learning data science and I love coding in Python"
+
+print("Original Text:")
+print(text)
+
+# Step 3: Tokenization
+tokens = word_tokenize(text)
+print("\nTokens:")
+print(tokens)
+
+# Step 4: Stopwords Removal
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+print("\nAfter Stopword Removal:")
+print(filtered_tokens)
+
+# Step 5: POS Tagging
+pos_tags = pos_tag(filtered_tokens)
+print("\nPOS Tags:")
+print(pos_tags)
+
+# Step 6: Stemming
+stemmer = PorterStemmer()
+stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
+
+print("\nAfter Stemming:")
+print(stemmed_words)
+
+# Step 7: Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+
+print("\nAfter Lemmatization:")
+print(lemmatized_words)
+
+# Step 8: TF-IDF Calculation
+documents = [text]   # can add more documents in list
+
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+print("\nTF-IDF Values:")
+print(tfidf_matrix.toarray())
+
+print("\nFeature Names (Words):")
+print(vectorizer.get_feature_names_out())

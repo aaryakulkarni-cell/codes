@@ -1,0 +1,32 @@
+# Step 1: Import required libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Load Iris dataset
+df = sns.load_dataset('iris')
+
+# Step 3: Display dataset
+df
+
+# Step 4: Show feature names
+df.columns
+
+# Step 5: Show data types
+df.dtypes
+
+# Step 6: Histograms for all numeric features
+df.hist(figsize=(10,8))
+plt.suptitle("Histograms of Iris Dataset Features")
+plt.show()
+
+# Step 7: Boxplot for all features together
+sns.boxplot(data=df)
+plt.title("Boxplot of All Features")
+plt.show()
+
+# Step 8: Boxplot for each feature individually (better understanding)
+for col in df.columns[:-1]:   # skip 'species'
+    sns.boxplot(y=df[col])
+    plt.title(f"Boxplot of {col}")
+    plt.show()

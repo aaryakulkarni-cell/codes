@@ -1,0 +1,54 @@
+# Step 1: Import required libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+
+# Step 2: Load dataset
+df = pd.read_csv("Social_Network_Ads.csv")
+
+# Display first few rows
+df.head()
+
+# Step 3: Select input features and output
+X = df[['Age', 'EstimatedSalary']]
+y = df['Purchased']
+
+# Step 4: Split dataset into training and testing
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Step 5: Create Logistic Regression model
+model = LogisticRegression()
+
+# Step 6: Train the model
+model.fit(X_train, y_train)
+
+# Step 7: Predict on test data
+y_pred = model.predict(X_test)
+
+# Step 8: Create Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+cm   # This will display [[TN FP], [FN TP]]
+
+# Step 9: Extract TN, FP, FN, TP
+TN, FP, FN, TP = cm.ravel()
+
+# Step 10: Calculate Metrics
+
+# Accuracy
+accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+# Error Rate
+error_rate = (FP + FN) / (TP + TN + FP + FN)
+
+# Precision
+precision = TP / (TP + FP)
+
+# Recall
+recall = TP / (TP + FN)
+
+# Step 11: Display results
+accuracy, error_rate, precision, recall

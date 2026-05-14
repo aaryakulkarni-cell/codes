@@ -1,0 +1,51 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 1: Create dataset
+data = {
+    'gender': ['male','female','female','male'],
+    'math score': [85, None, 120, 40],
+    'reading score': [78, 90, None, 60],
+    'writing score': [88, None, 70, 55]
+}
+
+df = pd.DataFrame(data)
+
+# Step 2: Display original dataset
+df
+
+# Step 3: Check missing values
+df.isnull().sum()
+
+# Step 4: Handle missing values
+df['math score'] = df['math score'].fillna(df['math score'].mean())
+df['reading score'] = df['reading score'].fillna(df['reading score'].median())
+df['writing score'] = df['writing score'].fillna(df['writing score'].mean())
+
+# After filling
+df
+
+# Step 5: Detect outliers using boxplot
+sns.boxplot(data=df[['math score','reading score','writing score']])
+plt.title("Boxplot for Outlier Detection")
+plt.show()
+
+# Step 6: Remove outliers
+df = df[df['math score'] <= 100]
+
+# After removing outliers
+df
+
+# Step 7: Data Transformation (Normalization)
+df['math score'] = df['math score'] / 100
+
+# After normalization
+df
+
+# Step 8: Convert categorical to numeric
+df['gender'] = df['gender'].map({'male':1, 'female':0})
+
+# Final dataset
+df

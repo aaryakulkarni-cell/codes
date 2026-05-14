@@ -1,0 +1,31 @@
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("IRIS.csv")
+
+# View first rows
+df.head()
+
+# Dataset info
+df.info()
+
+# Missing values
+df.isnull().sum()
+
+# Statistical summary
+df.describe()
+
+# Normalization
+df[['sepal_length','sepal_width','petal_length','petal_width']] = (
+    df[['sepal_length','sepal_width','petal_length','petal_width']] - 
+    df[['sepal_length','sepal_width','petal_length','petal_width']].min()
+) / (
+    df[['sepal_length','sepal_width','petal_length','petal_width']].max() - 
+    df[['sepal_length','sepal_width','petal_length','petal_width']].min()
+)
+
+# Convert categorical to numerical
+df = pd.get_dummies(df, columns=['species'])
+
+# Final output
+df.head()

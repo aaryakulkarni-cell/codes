@@ -1,0 +1,32 @@
+# Step 1: Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix
+
+# Step 2: Load dataset
+df = pd.read_csv("iris.csv")
+
+# Step 3: Features and target
+X = df[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']]
+y = df['species']
+
+# Step 4: Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Step 5: Train model
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Step 6: Predict
+y_pred = model.predict(X_test)
+
+# Step 7: Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+cm
+
+# Step 8: Accuracy
+accuracy = (y_pred == y_test).sum() / len(y_test)
+accuracy
