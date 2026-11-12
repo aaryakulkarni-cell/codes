@@ -1,0 +1,256 @@
+Part A: Google Colab code
+Step 1. Import the required libraries
+Cell 1 – Run this first
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+
+Step 2. Load the dataset
+Cell 2 – Choose ONE of the following methods
+Method 1: Directly upload the CSV into Colab
+Click the folder icon on the left → Upload → select uber.csv.
+Then execute:
+
+df = pd.read_csv("/content/uber.csv")
+
+df.head()
+
+Method 2: Load the CSV from Google Drive
+If the dataset is saved in your MyDrive folder, use this instead:
+
+from google.colab import drive
+
+drive.mount("/content/drive")
+
+df = pd.read_csv("/content/drive/MyDrive/uber.csv")
+
+df.head()
+
+Step 3. Understand the dataset
+Cell 3
+
+print(df.shape)
+
+df.info()
+
+print(df.describe())
+
+print(df.isnull().sum())
+
+Step 4. Preprocess the dataset
+Cell 4
+
+# Remove unnecessary columns
+df = df.drop(columns=["Unnamed: 0", "key"], errors="ignore")
+
+# Convert pickup_datetime into datetime format
+df["pickup_datetime"] = pd.to_datetime(
+    df["pickup_datetime"], errors="coerce", utc=True
+)
+
+# Remove missing values
+df = df.dropna()
+
+# Extract useful time features
+df["year"] = df["pickup_datetime"].dt.year
+df["month"] = df["pickup_datetime"].dt.month
+df["day"] = df["pickup_datetime"].dt.day
+df["hour"] = df["pickup_datetime"].dt.hour
+df["day_of_week"] = df["pickup_datetime"].dt.dayofweek
+
+# Remove original datetime column
+df = df.drop("pickup_datetime", axis=1)
+
+# Remove invalid fare values
+df = df[df["fare_amount"] > 0]
+
+# Remove invalid coordinates
+df = df[
+    (df["pickup_latitude"].between(-90, 90)) &
+    (df["dropoff_latitude"].between(-90, 90)) &
+    (df["pickup_longitude"].between(-180, 180)) &
+    (df["dropoff_longitude"].between(-180, 180))
+]
+
+# Remove zero coordinates and invalid passenger counts
+df = df[
+    (df["pickup_latitude"] != 0) &
+    (df["pickup_longitude"] != 0) &
+    (df["dropoff_latitude"] != 0) &
+    (df["dropoff_longitude"] != 0) &
+    (df["passenger_count"].between(1, 6))
+]
+
+print("Dataset after preprocessing:")
+print(df.head())
+
+print("Shape:", df.shape)
+
+Step 5. Calculate ride distance
+Cell 5
+We calculate the geographical distance between pickup and drop-off coordinates using the Haversine formula.
+
+# Convert degrees into radians
+lat1 = np.radians(df["pickup_latitude"])
+lon1 = np.radians(df["pickup_longitude"])
+
+lat2 = np.radians(df["dropoff_latitude"])
+lon2 = np.radians(df["dropoff_longitude"])
+
+# Haversine formula
+a = (
+    np.sin((lat2 - lat1) / 2) ** 2 +
+    np.cos(lat1) * np.cos(lat2) *
+    np.sin((lon2 - lon1) / 2) ** 2
+)
+
+df["distance"] = 6371 * 2 * np.arcsin(np.sqrt(a))
+
+print(df[["distance", "fare_amount"]].head())
+
+Step 6. Identify and remove outliers
+Cell 6
+We use the IQR method to identify outliers in the fare amount.
+
+# Plot boxplot
+sns.boxplot(x=df["fare_amount"])
+plt.title("Outliers in Fare Amount")
+plt.show()
+
+# Calculate IQR
+Q1 = df["fare_amount"].quantile(0.25)
+Q3 = df["fare_amount"].quantile(0.75)
+
+IQR = Q3 - Q1
+
+lower = Q1 - 1.5 * IQR
+upper = Q3 + 1.5 * IQR
+
+# Count outliers
+outliers = df[
+    (df["fare_amount"] < lower) |
+    (df["fare_amount"] > upper)
+]
+
+print("Number of outliers:", len(outliers))
+
+# Remove outliers
+df = df[
+    (df["fare_amount"] >= lower) &
+    (df["fare_amount"] <= upper)
+]
+
+print("Shape after removing outliers:", df.shape)
+
+Step 7. Check correlation
+Cell 7
+
+correlation = df.corr(numeric_only=True)
+
+plt.figure(figsize=(10, 7))
+
+sns.heatmap(
+    correlation,
+    annot=True,
+    cmap="coolwarm",
+    fmt=".2f"
+)
+
+plt.title("Correlation Heatmap")
+plt.show()
+
+Step 8. Separate input and output variables
+Cell 8
+
+X = df.drop("fare_amount", axis=1)
+
+y = df["fare_amount"]
+
+# Split dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print("Training data:", X_train.shape)
+print("Testing data:", X_test.shape)
+
+Step 9. Implement Linear Regression
+Cell 9
+
+lr = LinearRegression()
+
+lr.fit(X_train, y_train)
+
+y_pred_lr = lr.predict(X_test)
+
+print("Linear Regression R2 Score:",
+      r2_score(y_test, y_pred_lr))
+
+print("Linear Regression RMSE:",
+      np.sqrt(mean_squared_error(y_test, y_pred_lr)))
+
+print("Linear Regression MAE:",
+      mean_absolute_error(y_test, y_pred_lr))
+
+Step 10. Implement Random Forest Regression
+Cell 10
+
+rf = RandomForestRegressor(
+    n_estimators=50,
+    random_state=42,
+    n_jobs=-1
+)
+
+rf.fit(X_train, y_train)
+
+y_pred_rf = rf.predict(X_test)
+
+print("Random Forest R2 Score:",
+      r2_score(y_test, y_pred_rf))
+
+print("Random Forest RMSE:",
+      np.sqrt(mean_squared_error(y_test, y_pred_rf)))
+
+print("Random Forest MAE:",
+      mean_absolute_error(y_test, y_pred_rf))
+
+Step 11. Compare both models
+Cell 11
+
+results = pd.DataFrame({
+    "Model": ["Linear Regression", "Random Forest"],
+    "R2 Score": [
+        r2_score(y_test, y_pred_lr),
+        r2_score(y_test, y_pred_rf)
+    ],
+    "RMSE": [
+        np.sqrt(mean_squared_error(y_test, y_pred_lr)),
+        np.sqrt(mean_squared_error(y_test, y_pred_rf))
+    ],
+    "MAE": [
+        mean_absolute_error(y_test, y_pred_lr),
+        mean_absolute_error(y_test, y_pred_rf)
+    ]
+})
+
+print(results)
+
+Step 12. Display the better model
+Cell 12 – Conclusion
+
+if r2_score(y_test, y_pred_rf) > r2_score(y_test, y_pred_lr):
+    print("Random Forest performs better.")
+else:
+    print("Linear Regression performs better.")
+
+
+Part B: What changes in VS Code Jupyter?
+
+df = pd.read_csv("uber.csv")

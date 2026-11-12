@@ -1,0 +1,144 @@
+Cell 1: Import required libraries
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import classification_report
+from sklearn.metrics import precision_score, recall_score, f1_score
+
+Cell 2: Load the dataset
+
+df = pd.read_csv("/content/emails.csv")
+
+df.head()
+
+Cell 3: Explore the dataset
+
+print("Dataset Shape:", df.shape)
+
+print("\nDataset Information:")
+df.info()
+
+print("\nMissing Values:")
+print(df.isnull().sum().sum())
+
+print("\nClass Distribution:")
+print(df["Prediction"].value_counts())
+
+Cell 4: Preprocess the dataset
+
+# Remove email identification column
+df = df.drop("Email No.", axis=1)
+
+# Remove missing values
+df = df.dropna()
+
+# Separate input features and target variable
+X = df.drop("Prediction", axis=1)
+y = df["Prediction"]
+
+Cell 5: Split the dataset into training and testing data
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+Cell 6: Feature Scaling
+
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+Cell 7: Implement K-Nearest Neighbors (KNN)
+
+knn = KNeighborsClassifier(n_neighbors=5)
+
+knn.fit(X_train, y_train)
+
+y_pred_knn = knn.predict(X_test)
+
+Cell 8: Evaluate KNN model
+
+print("KNN Model Performance")
+
+print("Accuracy:", accuracy_score(y_test, y_pred_knn))
+
+print("Precision:", precision_score(y_test, y_pred_knn, zero_division=0))
+
+print("Recall:", recall_score(y_test, y_pred_knn, zero_division=0))
+
+print("F1 Score:", f1_score(y_test, y_pred_knn, zero_division=0))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred_knn))
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_knn, zero_division=0))
+
+Cell 9: Implement Support Vector Machine (SVM)
+
+svm = SVC(kernel="linear")
+
+svm.fit(X_train, y_train)
+
+y_pred_svm = svm.predict(X_test)
+
+Cell 10: Evaluate SVM model
+
+print("SVM Model Performance")
+
+print("Accuracy:", accuracy_score(y_test, y_pred_svm))
+
+print("Precision:", precision_score(y_test, y_pred_svm, zero_division=0))
+
+print("Recall:", recall_score(y_test, y_pred_svm, zero_division=0))
+
+print("F1 Score:", f1_score(y_test, y_pred_svm, zero_division=0))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred_svm))
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_svm, zero_division=0))
+
+Cell 11: Compare the performance of both models
+
+results = pd.DataFrame({
+    "Model": ["KNN", "SVM"],
+    "Accuracy": [
+        accuracy_score(y_test, y_pred_knn),
+        accuracy_score(y_test, y_pred_svm)
+    ],
+    "Precision": [
+        precision_score(y_test, y_pred_knn, zero_division=0),
+        precision_score(y_test, y_pred_svm, zero_division=0)
+    ],
+    "Recall": [
+        recall_score(y_test, y_pred_knn, zero_division=0),
+        recall_score(y_test, y_pred_svm, zero_division=0)
+    ],
+    "F1 Score": [
+        f1_score(y_test, y_pred_knn, zero_division=0),
+        f1_score(y_test, y_pred_svm, zero_division=0)
+    ]
+})
+
+print(results)
+
+Cell 12: Display comparison graph
+
+results.set_index("Model").plot(kind="bar", figsize=(8, 5))
+
+plt.title("Performance Comparison of KNN and SVM")
+plt.ylabel("Score")
+plt.ylim(0, 1)
+plt.xticks(rotation=0)
+plt.show()

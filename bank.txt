@@ -1,0 +1,146 @@
+Cell 1: Import required libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
+
+Cell 2: Load the dataset
+
+df = pd.read_csv("/content/Churn_Modelling.csv")
+
+df.head()
+
+Cell 3: Explore the dataset
+
+print("Dataset Shape:", df.shape)
+
+print("\nDataset Information:")
+df.info()
+
+print("\nMissing Values:")
+print(df.isnull().sum().sum())
+
+print("\nTarget Distribution:")
+print(df["Exited"].value_counts())
+
+Cell 4: Preprocess the dataset
+
+# Remove unnecessary columns
+df = df.drop(["RowNumber", "CustomerId", "Surname"], axis=1)
+
+# Convert categorical columns into numerical columns
+df = pd.get_dummies(df, columns=["Geography", "Gender"], drop_first=True, dtype=int)
+
+# Separate features and target
+X = df.drop("Exited", axis=1)
+y = df["Exited"]
+
+Cell 5: Split the dataset into training and testing data
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+Cell 6: Normalize the data
+
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+Cell 7: Initialize and build the initial ANN model
+
+model = Sequential()
+
+model.add(Dense(16, activation="relu", input_shape=(X_train.shape[1],)))
+
+model.add(Dense(8, activation="relu"))
+
+model.add(Dense(1, activation="sigmoid"))
+
+model.compile(
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
+
+Cell 8: Train the initial model
+
+history = model.fit(
+    X_train, y_train,
+    epochs=50,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=1
+)
+
+Cell 9: Evaluate the initial model
+
+y_pred = (model.predict(X_test) >= 0.5).astype(int)
+
+print("Initial Model Accuracy:", accuracy_score(y_test, y_pred))
+
+print("\nInitial Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+Cell 10: Improve the ANN model
+
+improved_model = Sequential()
+
+improved_model.add(Dense(16, activation="relu", input_shape=(X_train.shape[1],)))
+
+improved_model.add(Dropout(0.2))
+
+improved_model.add(Dense(8, activation="relu"))
+
+improved_model.add(Dropout(0.2))
+
+improved_model.add(Dense(1, activation="sigmoid"))
+
+improved_model.compile(
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
+
+Cell 11: Train the improved model
+
+early_stop = EarlyStopping(
+    monitor="val_loss",
+    patience=5,
+    restore_best_weights=True
+)
+
+history2 = improved_model.fit(
+    X_train, y_train,
+    epochs=50,
+    batch_size=32,
+    validation_split=0.2,
+    callbacks=[early_stop],
+    verbose=1
+)
+
+Cell 12: Evaluate the improved model
+
+y_pred_improved = (improved_model.predict(X_test) >= 0.5).astype(int)
+
+print("Improved Model Accuracy:", accuracy_score(y_test, y_pred_improved))
+
+print("\nImproved Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_improved))
+
+Cell 13: Compare initial and improved models
+
+print("Initial Model Accuracy:",
+      accuracy_score(y_test, y_pred))
+
+print("Improved Model Accuracy:",
+      accuracy_score(y_test, y_pred_improved))
